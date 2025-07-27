@@ -1,0 +1,79 @@
+# 创建 python 功能包 
+ros2 pkg create --build-type ament_python ros2_ce1_python  
+# 创建 cpp 功能包
+ros2 pkg create --build-type ament_cmake interface_all  
+
+# 编译全部
+colcon build
+
+# 编译单个（注意：先单独编译接口功能包）
+colcon build --packages-select interface_all
+
+
+# 临时环境变量
+source /home/lbw/ros2_all/install/setup.bash
+# 永久环境变量
+echo "source /home/lbw/ros2_all/install/setup.bash" >> ~/.bashrc && source ~/.bashrc
+输入运行命令提示不存在，换新终端试下
+
+# 功能包运行命令
+
+# python
+# 你好 世界
+ros2 run ros2_ce1_python lbw_ce1
+ros2 run ros2_ce1_python lbw_ce2
+# 传输视频
+ros2 run ros2_img_python lbw_img_ce1
+ros2 run ros2_img_python lbw_img_ce2
+# 单独先起摄像头传输，单次询问坐标位置
+ros2 run ros2_service_python lbw_service_ce1
+ros2 run ros2_service_python lbw_service_ce2
+# 话题+服务=动作执行
+ros2 run ros2_action_python action_ce1
+ros2 run ros2_action_python action_ce2
+
+# cpp
+# 你好 世界
+ros2 run ros2_ce1_cpp1 cpp_ce1
+ros2 run ros2_ce1_cpp1 cpp_ce2
+# 传输视频
+ros2 run ros2_img_cpp1 video_publisher
+ros2 run ros2_img_cpp1 video_subscriber
+# 客户端 输出2数 服务端进行相加返回
+ros2 run ros2_service_cpp service_object_client
+ros2 run ros2_service_cpp service_object_server
+# 单个完整动作
+ros2 run ros2_action_cpp action_move_server
+ros2 run ros2_action_cpp action_move_client
+
+
+
+测试方案：
+传输图像 img 640*640*3 对比 C++ 与 python 的速度 
+以发送间隔 20ms 为标准
+
+测试效果如下：前处理统一缩放至640*640*3
+
+cpp 
+发送间隔 20ms 
+
+未做任何后续处理，例如显示图像
+发送帧数 0 - 0 接收帧数
+
+
+添加绘制圆和显示图像处理
+发送帧数 0 - 0 接收帧数
+
+
+python
+发送间隔 20ms 
+
+未做任何后续处理，例如显示图像
+发送帧数 0 - 0 接收帧数
+
+添加绘制圆和显示图像处理
+发送帧数 0 - 0 接收帧数
+
+结论：在通讯传输上，两者速度无明显差别，当添加后续任意处理后，C++效率明显比python快非常多。
+c++     0 fps
+python  0 fps
