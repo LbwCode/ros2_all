@@ -3,8 +3,6 @@ ros2 pkg create --build-type ament_python ros2_ce1_python
 # 创建 cpp 功能包
 ros2 pkg create --build-type ament_cmake interface_all  
 
-ros2 pkg create --build-type ament_cmake ros2_rate_cpp
-ros2 pkg create --build-type ament_python ros2_rate_python 
 
 # 编译全部
 colcon build
@@ -15,8 +13,6 @@ colcon build --packages-select interface_all
 ros2_param_cpp1
 
 # 临时环境变量
-source /home/lbw/ros2_all/install/setup.bash
-
 source /home/lbw/ros2_all/install/setup.bash
 
 # 永久环境变量
