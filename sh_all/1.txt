@@ -3,15 +3,22 @@ ros2 pkg create --build-type ament_python ros2_ce1_python
 # 创建 cpp 功能包
 ros2 pkg create --build-type ament_cmake interface_all  
 
+ros2 pkg create --build-type ament_cmake ros2_rate_cpp
+ros2 pkg create --build-type ament_python ros2_rate_python 
+
 # 编译全部
 colcon build
 
 # 编译单个（注意：先单独编译接口功能包）
 colcon build --packages-select interface_all
 
+ros2_param_cpp1
 
 # 临时环境变量
 source /home/lbw/ros2_all/install/setup.bash
+
+source /home/lbw/ros2_all/install/setup.bash
+
 # 永久环境变量
 echo "source /home/lbw/ros2_all/install/setup.bash" >> ~/.bashrc && source ~/.bashrc
 输入运行命令提示不存在，换新终端试下
@@ -45,7 +52,69 @@ ros2 run ros2_service_cpp service_object_server
 # 单个完整动作
 ros2 run ros2_action_cpp action_move_server
 ros2 run ros2_action_cpp action_move_client
+# 参数通讯
+ros2 run ros2_param_cpp1 param_2
+ros2 run ros2_param_cpp1 param_3
 
+
+
+常用命令：
+大检查
+ros2 doctor   
+
+小王八：
+ros2 run turtlesim turtlesim_node
+ros2 run turtlesim turtle_teleop_key
+
+1. node 节点相关
+查看当有哪些节点在运行
+ros2 node list
+
+查看当前某个节点内部有多少通讯
+ros2 node info
+
+2. interface 接口相关
+查看所有接口
+ros2 interface list
+查看某功能包下的所有接口
+ros2 interface package turtlesim
+包含接口的功能包
+ros2 interface package 
+某个接口的格式
+ros2 interface proto 接口名
+某接口的全部内容
+ros2 interface show 接口名
+
+3. topic  话题相关
+查看当前所有的话题
+ros2 topic list
+查看话题占用带宽
+ros2 topic bw 话题名
+查看某话题的使用的接口   话题-》消息类型
+ros2 topic type 话题名
+查看某话题的数据传输时间戳 注意：自定义的是没有的
+ros2 topic delay 话题名
+输出某话题的内容
+ros2 topic echo 话题名
+例如：小王八的坐标
+ros2 topic echo /turtle1/pose
+消息类型-》话题
+ros2 topic find 消息类型
+例如：：查小王八的话题
+ros2 topic find turtlesim/msg/Pose
+查看话题发布的频率
+ros2 topic hz 
+
+4. service 服务相关
+查看当前所有的服务
+ros2 service list 
+同上
+服务-消息类型 type
+消息类型-》服务 find
+
+5. action 动作相关
+同上
+list info
 
 
 测试方案：
@@ -77,3 +146,7 @@ python
 结论：在通讯传输上，两者速度无明显差别，当添加后续任意处理后，C++效率明显比python快非常多。
 c++     0 fps
 python  0 fps
+
+
+
+
