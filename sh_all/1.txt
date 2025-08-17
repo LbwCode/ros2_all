@@ -3,21 +3,32 @@ ros2 pkg create --build-type ament_python ros2_ce1_python
 # 创建 cpp 功能包
 ros2 pkg create --build-type ament_cmake interface_all  
 
-
 # 编译全部
 colcon build
 
 # 编译单个（注意：先单独编译接口功能包）
 colcon build --packages-select interface_all
 
-ros2_param_cpp1
-
 # 临时环境变量
 source /home/lbw/ros2_all/install/setup.bash
+
 
 # 永久环境变量
 echo "source /home/lbw/ros2_all/install/setup.bash" >> ~/.bashrc && source ~/.bashrc
 输入运行命令提示不存在，换新终端试下
+
+
+
+launch 工具 多节点(功能包)启动
+# cpp 中 cmakelist.txt添加 
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+# python 添加 路径 
+data_files=[
+    ('share/' + package_name, ['launch/ce1_launch.xml']),
+]
+
+ros2 launch ros2_launch_cpp_ce1 ce1_launch.xml
+ros2 launch ros2_launch_python_ce1 ce1_launch.xml
 
 # 功能包运行命令
 
@@ -113,6 +124,26 @@ ros2 service list
 list info
 
 
+分布式通讯
+# 编辑配置文件
+vim ~/.bashrc
+
+# 在文件末尾添加（根据场景选择）
+# 场景1：同一局域网
+export ROS_DOMAIN_ID=10
+
+# 场景2：跨子网（替换为实际服务器IP）
+组1：设备 1号（192.198.2.10）与设备 3号（192.168.1.21）通信
+# 设备3号终端：启动发现服务器（默认端口42555）
+ros2 run rmw_fastrtps_cpp discovery_server
+选择一台设备作为设备3 发现服务器
+# export ROS_DOMAIN_ID=10
+# export ROS_DISCOVERY_SERVER=192.168.1.21:42555
+
+# 生效配置
+source ~/.bashrc
+
+
 测试方案：
 传输图像 img 640*640*3 对比 C++ 与 python 的速度 
 以发送间隔 20ms 为标准
@@ -142,7 +173,4 @@ python
 结论：在通讯传输上，两者速度无明显差别，当添加后续任意处理后，C++效率明显比python快非常多。
 c++     0 fps
 python  0 fps
-
-
-
 
